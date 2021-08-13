@@ -1,0 +1,20 @@
+name: Sussy
+version: ${project.version}
+main: com.edgeburnmedia.sussy.Sussy
+api-version: 1.16
+authors: [ Edgeburn02 ]
+description: Adds the /sussy command to eject sussy imposters into the void!
+website: edgeburnmedia.com
+permissions:
+  sussy.exempt:
+    description: Players with this permission cannot be ejected
+    default: false
+  sussy.sussycommand:
+    description: Use the /sussy command
+    default: op
+commands:
+  sussy:
+    description: Ejects the sussy imposter into the void!
+    usage: /sussy <player>
+    permission: sussy.sussycommand
+    permission-message: You are too sussy to use this command! (No permission)
