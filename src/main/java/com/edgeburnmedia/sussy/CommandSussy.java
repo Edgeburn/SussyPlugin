@@ -13,9 +13,11 @@ public class CommandSussy implements CommandExecutor {
 
     public static final double VOID_LOCATION = -300d;
     public static boolean showEjectorName;
+    public static boolean broadcastEjectToEveryone;
 
     CommandSussy(Sussy plugin) {
         showEjectorName = plugin.showEjectorName();
+        broadcastEjectToEveryone = plugin.broadcastEjectToEveryone();
     }
 
     @Override
@@ -51,10 +53,14 @@ public class CommandSussy implements CommandExecutor {
             subtitle = "They were ejected";
         }
 
-        for (Player player : getOnlinePlayers()) { // send everyone on the server the message that the player in ejected was the sussy imposter
-            player.sendTitle(playerToTeleport.getDisplayName() + " was the sussy Imposter!", subtitle, 1, 70, 10);
+        if (broadcastEjectToEveryone) {
+            for (Player player : getOnlinePlayers()) { // send everyone on the server the message that the player in ejected was the sussy imposter
+                player.sendTitle(playerToTeleport.getDisplayName() + " was the sussy Imposter!", subtitle, 1, 70, 10);
+            }
+        } else {
+            playerToTeleport.sendTitle(playerToTeleport.getDisplayName() + " was the sussy Imposter!", subtitle, 1, 70, 10);
+            ((Player) sender).sendTitle(playerToTeleport.getDisplayName() + " was the sussy Imposter!", subtitle, 1, 70, 10);
         }
-
         sender.sendMessage(playerToTeleport.getDisplayName() + " was ejected!");
         getLogger().info(sender.getName() + " ejected " + playerToTeleport.getDisplayName());
         return true;
