@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 import static org.bukkit.Bukkit.*;
 
 public class CommandSussy implements CommandExecutor {
-
-    public static final double VOID_LOCATION = -300d;
     public static boolean showEjectorName;
     public static boolean broadcastEjectToEveryone;
 
@@ -42,8 +40,11 @@ public class CommandSussy implements CommandExecutor {
             return true;
         }
 
+        // Ensure that no matter what the world's minimum height is (should it be set via a datapack) it will always teleport 300 blocks below bedrock.
+        double voidLocation = playerToTeleport.getWorld().getMinHeight() - 300.0;
+
         currentPlayerLocation = playerToTeleport.getLocation(); // get the current location of the player to be teleported
-        Location locationToTeleportTo = new Location(playerToTeleport.getWorld(), currentPlayerLocation.getX(), VOID_LOCATION, currentPlayerLocation.getZ()); // set the location to which the player will be teleported, which is ~ -300 ~
+        Location locationToTeleportTo = new Location(playerToTeleport.getWorld(), currentPlayerLocation.getX(), voidLocation, currentPlayerLocation.getZ()); // set the location to which the player will be teleported, which is ~ -300 ~
 
         if (!(playerToTeleport.getGameMode() == GameMode.ADVENTURE)) { // we don't want to change the player's gamemode to survival if they're in adventure because it could break things
             playerToTeleport.setGameMode(GameMode.SURVIVAL);
