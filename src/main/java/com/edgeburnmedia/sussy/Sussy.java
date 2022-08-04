@@ -69,7 +69,7 @@ public final class Sussy extends JavaPlugin {
      * @param playerToTeleport The player to eject.
      * @param ejector The player who ejected the player.
      */
-    public static void sussyPlayer(Player playerToTeleport, Player ejector) {
+    public static void sussyPlayer(Player playerToTeleport, CommandSender ejector) {
         // Ensure that no matter what the world's minimum height is (should it be set via a datapack) it will always teleport 300 blocks below bedrock.
         double voidLocation = playerToTeleport.getWorld().getMinHeight() - 300.0;
 
@@ -91,6 +91,6 @@ public final class Sussy extends JavaPlugin {
      * @param playerToTeleport The player to eject.
      */
     public static void sussyPlayer(Player playerToTeleport) {
-        sussyPlayer(playerToTeleport, (Player) getInstance().getServer().getConsoleSender());
+        sussyPlayer(playerToTeleport, getInstance().getServer().getConsoleSender());
     }
 }

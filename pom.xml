@@ -6,7 +6,7 @@
 
     <groupId>com.edgeburnmedia</groupId>
     <artifactId>Sussy</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>Sussy</name>
