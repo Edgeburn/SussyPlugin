@@ -11,86 +11,91 @@ import org.bukkit.plugin.java.JavaPlugin;
 import static org.bukkit.Bukkit.getOnlinePlayers;
 
 public final class Sussy extends JavaPlugin {
-    private static Sussy INSTANCE;
-    public FileConfiguration config = getConfig();
-    public static final int BSTATS_PLUGIN_ID = 14568;
+	public static final int BSTATS_PLUGIN_ID = 14568;
+	private static Sussy INSTANCE;
+	public FileConfiguration config = getConfig();
 
-    private static void showTitle(Player playerToTeleport, CommandSender sender) {
-        String title;
-        String subtitle;
+	private static void showTitle(Player playerToTeleport, CommandSender sender) {
+		String title;
+		String subtitle;
 
-        if (CommandSussy.showEjectorName) {
-            subtitle = "They were ejected by " + sender.getName();
-        } else {
-            subtitle = "They were ejected";
-        }
+		if (CommandSussy.showEjectorName) {
+			subtitle = "They were ejected by " + sender.getName();
+		} else {
+			subtitle = "They were ejected";
+		}
 
-        title = playerToTeleport.getDisplayName() + " was the sussy Imposter!";
+		title = playerToTeleport.getDisplayName() + " was the sussy Imposter!";
 
-        if (CommandSussy.broadcastEjectToEveryone) {
-            for (Player player : getOnlinePlayers()) { // send everyone on the server the message that the player in ejected was the sussy imposter
-                player.sendTitle(title, subtitle, 1, 70, 10);
-            }
-        } else {
-            playerToTeleport.sendTitle(title, subtitle, 1, 70, 10);
-            ((Player) sender).sendTitle(title, subtitle, 1, 70, 10);
-        }
+		if (CommandSussy.broadcastEjectToEveryone) {
+			for (Player player : getOnlinePlayers()) { // send everyone on the server the message that the player in ejected was the sussy imposter
+				player.sendTitle(title, subtitle, 1, 70, 10);
+			}
+		} else {
+			playerToTeleport.sendTitle(title, subtitle, 1, 70, 10);
+			((Player) sender).sendTitle(title, subtitle, 1, 70, 10);
+		}
 
-    }
+	}
 
-    @Override
-    public void onEnable() {
-        INSTANCE = this;
-        this.getCommand("sussy").setExecutor(new CommandSussy(this));
-        config.addDefault("showEjectorName", true);
-        config.addDefault("broadcastEjectToEveryone", true);
-        config.options().copyDefaults(true);
-        saveConfig();
+	public static Sussy getInstance() {
+		return INSTANCE;
+	}
 
-        Metrics metrics = new Metrics(this, BSTATS_PLUGIN_ID);
-    }
+	/**
+	 * Ejects a player into the void and blames a specific player for it.
+	 *
+	 * @param playerToTeleport The player to eject.
+	 * @param ejector          The player who ejected the player.
+	 */
+	public static void sussyPlayer(Player playerToTeleport, CommandSender ejector) {
+		// Ensure that no matter what the world's minimum height is (should it be set via a datapack) it will always teleport 300 blocks below bedrock.
+		double voidLocation = playerToTeleport.getWorld().getMinHeight() - 300.0;
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+		Location currentPlayerLocation = playerToTeleport.getLocation(); // get the current location of the player to be teleported
+		Location locationToTeleportTo = new Location(playerToTeleport.getWorld(), currentPlayerLocation.getX(), voidLocation, currentPlayerLocation.getZ()); // set the location to which the player will be teleported, which is ~ -300 ~
 
-    public static Sussy getInstance() {
-        return INSTANCE;
-    }
+		if (!(playerToTeleport.getGameMode() == GameMode.ADVENTURE)) { // we don't want to change the player's gamemode to survival if they're in adventure because it could break things
+			playerToTeleport.setGameMode(GameMode.SURVIVAL);
+		}
 
-    public boolean showEjectorName() {
-        return config.getBoolean("showEjectorName", true);
-    }
-    public boolean broadcastEjectToEveryone() { return config.getBoolean("broadcastEjectToEveryone", true); }
+		playerToTeleport.teleport(locationToTeleportTo);
+		showTitle(playerToTeleport, ejector);
 
-    /**
-     * Ejects a player into the void and blames a specific player for it.
-     * @param playerToTeleport The player to eject.
-     * @param ejector The player who ejected the player.
-     */
-    public static void sussyPlayer(Player playerToTeleport, CommandSender ejector) {
-        // Ensure that no matter what the world's minimum height is (should it be set via a datapack) it will always teleport 300 blocks below bedrock.
-        double voidLocation = playerToTeleport.getWorld().getMinHeight() - 300.0;
+		getInstance().getLogger().info(ejector.getName() + " ejected " + playerToTeleport.getDisplayName());
+	}
 
-        Location currentPlayerLocation = playerToTeleport.getLocation(); // get the current location of the player to be teleported
-        Location locationToTeleportTo = new Location(playerToTeleport.getWorld(), currentPlayerLocation.getX(), voidLocation, currentPlayerLocation.getZ()); // set the location to which the player will be teleported, which is ~ -300 ~
+	/**
+	 * Ejects a player into the void and blames the server for it.
+	 *
+	 * @param playerToTeleport The player to eject.
+	 */
+	public static void sussyPlayer(Player playerToTeleport) {
+		sussyPlayer(playerToTeleport, getInstance().getServer().getConsoleSender());
+	}
 
-        if (!(playerToTeleport.getGameMode() == GameMode.ADVENTURE)) { // we don't want to change the player's gamemode to survival if they're in adventure because it could break things
-            playerToTeleport.setGameMode(GameMode.SURVIVAL);
-        }
+	@Override
+	public void onDisable() {
+		// Plugin shutdown logic
+	}
 
-        playerToTeleport.teleport(locationToTeleportTo);
-        showTitle(playerToTeleport, ejector);
+	@Override
+	public void onEnable() {
+		INSTANCE = this;
+		this.getCommand("sussy").setExecutor(new CommandSussy(this));
+		config.addDefault("showEjectorName", true);
+		config.addDefault("broadcastEjectToEveryone", true);
+		config.options().copyDefaults(true);
+		saveConfig();
 
-        getInstance().getLogger().info(ejector.getName() + " ejected " + playerToTeleport.getDisplayName());
-    }
+		Metrics metrics = new Metrics(this, BSTATS_PLUGIN_ID);
+	}
 
-    /**
-     * Ejects a player into the void and blames the server for it.
-     * @param playerToTeleport The player to eject.
-     */
-    public static void sussyPlayer(Player playerToTeleport) {
-        sussyPlayer(playerToTeleport, getInstance().getServer().getConsoleSender());
-    }
+	public boolean showEjectorName() {
+		return config.getBoolean("showEjectorName", true);
+	}
+
+	public boolean broadcastEjectToEveryone() {
+		return config.getBoolean("broadcastEjectToEveryone", true);
+	}
 }
