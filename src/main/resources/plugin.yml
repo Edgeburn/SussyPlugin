@@ -1,7 +1,7 @@
 name: Sussy
-version: ${project.version}
+version: ${version}
 main: com.edgeburnmedia.sussy.Sussy
-api-version: 1.16
+api-version: 1.18
 authors: [ Edgeburn02 ]
 description: Adds the /sussy command to eject sussy imposters into the void!
 website: edgeburnmedia.com
