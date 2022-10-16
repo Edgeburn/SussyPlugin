@@ -6,6 +6,18 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.edgeburnmedia.dooweeservermanagergradle' version '1.0-SNAPSHOT'
+}
+
+group = 'com.edgeburnmedia'
+version = '1.1.2'
+description = 'Sussy'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+dsm {
+    serverName = "Sussy"
+    minecraftVersion = "1.19.2"
+    artifactName = "Sussy-${version}.jar"
 }
 
 repositories {
@@ -27,11 +39,6 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:3.0.0'
     compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
 }
-
-group = 'com.edgeburnmedia'
-version = '1.1.2'
-description = 'Sussy'
-java.sourceCompatibility = JavaVersion.VERSION_16
 
 task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
@@ -80,3 +87,5 @@ shadowJar {
     relocate('org.bstats', 'com.edgeburnmedia.bstats')
     archiveFileName.set("Sussy-${version}.jar")
 }
+
+tasks.getByName("build").dependsOn("shadowJar")
