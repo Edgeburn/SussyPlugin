@@ -24,7 +24,7 @@ jobs:
           distribution: "temurin"
 
       - name: Build
-        run: ./gradlew buildFatJar -x test --info
+        run: ./gradlew build --info
 
       - name: Gradle Dependency Submission
         if: github.ref == 'refs/heads/master'
