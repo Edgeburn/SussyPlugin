@@ -14,6 +14,7 @@ public final class Sussy extends JavaPlugin {
 	public static final int BSTATS_PLUGIN_ID = 14568;
 	private static Sussy INSTANCE;
 	public FileConfiguration config = getConfig();
+	private SussyPacketListener sussyPacketListener;
 
 	private static void showTitle(Player playerToTeleport, CommandSender sender) {
 		String title;
@@ -76,6 +77,9 @@ public final class Sussy extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		sussyPacketListener = new SussyPacketListener();
+		getServer().getMessenger().unregisterIncomingPluginChannel(this, SussyPacketListener.SUSSY_PLAYER_PACKET_ID,
+			sussyPacketListener);
 		// Plugin shutdown logic
 	}
 
@@ -87,6 +91,8 @@ public final class Sussy extends JavaPlugin {
 		config.addDefault("broadcastEjectToEveryone", true);
 		config.options().copyDefaults(true);
 		saveConfig();
+		sussyPacketListener = new SussyPacketListener();
+		getServer().getMessenger().registerIncomingPluginChannel(this, SussyPacketListener.SUSSY_PLAYER_PACKET_ID, sussyPacketListener);
 
 		Metrics metrics = new Metrics(this, BSTATS_PLUGIN_ID);
 	}
@@ -97,5 +103,9 @@ public final class Sussy extends JavaPlugin {
 
 	public boolean broadcastEjectToEveryone() {
 		return config.getBoolean("broadcastEjectToEveryone", true);
+	}
+
+	public static boolean supportsPackets() {
+		return true;
 	}
 }
