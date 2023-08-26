@@ -5,6 +5,8 @@ api-version: 1.19
 authors: [ Edgeburn02 ]
 description: Adds the /sussy command to eject sussy imposters into the void!
 website: edgeburnmedia.com
+softdepend:
+  - PvPManager
 permissions:
   sussy.exempt:
     description: Players with this permission cannot be ejected
